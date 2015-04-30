@@ -1,0 +1,11 @@
+host:
+ http://172.16.91.128:8080/
+
+object_path:
+ api/sector/%d/objects
+
+root_path:
+ api/sector/%d/roots
+
+trajectory_path:
+ api/sector/%d/company/team_name_goes_here/trajectory
