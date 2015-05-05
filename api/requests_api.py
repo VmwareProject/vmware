@@ -11,7 +11,7 @@ class RequestsApi:
 		'request to get objects'
 		objects_points = []
 		url = self.config['host'] + self.config['object_path'] % sector
-		response = requests.get(url)
+		response = requests.get(url)		
 		if not response.status_code == 200 : return []
 		for line in response.text.splitlines():
 			objects_points.append([int(num) for num in line.split(' ')]) 

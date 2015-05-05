@@ -5,8 +5,6 @@ from algorithm.fast_dfs import FastDfs
 import yaml
 
 class Graph:
-	config = yaml.load(open("config/settings.yml", "r"))
-
 	def __init__(self, sector):
 		self.edges_size = 0
 		self.sector = sector
@@ -25,10 +23,7 @@ class Graph:
 		if not self.vertex.has_key(id): self.vertex[id] = Vertex(id)
 
 	def search_path(self):
-		if self.edges_size < int(Graph.config['algorithm_border']):
-			result = self.dfs_algorithm.start()
-		else:
-			result = self.fast_dfs_algorithm.start()
+		result = self.fast_dfs_algorithm.start()
 		return ' '.join([str(i) for i in result])
 
 	def connect(self, id1, id2):
@@ -55,9 +50,8 @@ class Graph:
 				if target != vertex: self.remove_and_next(target.id)
 
 def make_graph(requests, sector):
-	graph = Graph(sector)		
+	graph = Graph(sector)	
 	objects = requests.get_objects(sector)
-	print objects
 	roots = requests.get_roots(sector)
 	graph.edges_size = len(objects)
 	for point in objects:

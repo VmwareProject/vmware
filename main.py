@@ -1,21 +1,31 @@
 from api.requests_api import RequestsApi
 from graph import graph
-import random
+import threading
 
-sectors = range(1, 11)
-random.shuffle(sectors)
-
-request = RequestsApi()
-
-for sector in [3]:#sectors:
-	current_graph = graph.make_graph(request, sector)
-	print current_graph.edges_size
-	#print sector
-	'''while True:
+def clean_sector(request, sector, current_graph = False):
+	if not current_graph:
+		current_graph = graph.make_graph(request, sector)
+	print sector
+	while current_graph.edges_size > 0:
 		path = current_graph.search_path()
 		request.send_trajectory(sector, path) 
-		#print current_graph.edges_size
-		if current_graph.edges_size <= 4: 
-			break		
-		current_graph.update(request)'''
-	print current_graph.vertex.keys()
+		current_graph.update(request)
+	print "Ending thread %d" % sector
+
+threads = []
+
+sectors = range(2, 11)
+request = RequestsApi()
+
+current_graph = graph.make_graph(request, 1)
+t = threading.Thread(target=clean_sector, args=(request, 1, current_graph,))
+threads.append(t)
+t.start()
+
+for sector in sectors:
+	t = threading.Thread(target=clean_sector, args=(request, sector,))
+	threads.append(t)
+	t.start()
+
+for thread in threads:
+	thread.join()
